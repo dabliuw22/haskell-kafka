@@ -1,0 +1,12 @@
+.stack-work/
+*~
+cabal.project.local
+*.iml
+dist-newstyle/
+dist/
+logs/
+.ghc.*
+.direnv
+.idea/
+out/
+.DS_Store
