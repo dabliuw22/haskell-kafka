@@ -1,0 +1,1 @@
+module Adapter.Subscriber where
