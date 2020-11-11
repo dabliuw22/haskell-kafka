@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Main where
+module PublisherKafka where
 
 import Adapter.Publisher (useProducer)
 import Domain.Message (Key (..), Message (..))

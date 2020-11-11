@@ -36,7 +36,7 @@ $ docker exec -it my_haskell_kafka bash /opt/kafka/bin/kafka-console-consumer.sh
 6. Run Publisher App:
 ```
 $ stack build
-$ stack exec haskell-kafka-exe
+$ stack exec haskell-publisher-kafka-exe
 ```
 
 ## Dowload Apache Kafka
@@ -76,5 +76,5 @@ $ ./{KAFKA_PATH}/bin/kafka-console-consumer.sh -bootstrap-server localhost:9092 
 8. Run Publisher App:
 ```
 $ stack build
-$ stack exec haskell-kafka-exe
+$ stack exec haskell-publisher-kafka-exe
 ```

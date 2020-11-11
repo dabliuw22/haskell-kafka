@@ -41,14 +41,15 @@ library:
   source-dirs: src
 
 executables:
-  haskell-kafka-exe:
-    main:                Main.hs
+  haskell-publisher-kafka-exe:
+    main:                PublisherKafka.hs
     source-dirs:         app
     ghc-options:
     - -O2
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
+    - -main-is PublisherKafka
     dependencies:
     - haskell-kafka
 
