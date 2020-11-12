@@ -52,6 +52,17 @@ executables:
     - -main-is PublisherKafka
     dependencies:
     - haskell-kafka
+  haskell-consumer-kafka-exe:
+    main:                ConsumerKafka.hs
+    source-dirs:         app
+    ghc-options:
+      - -O2
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+      - -main-is ConsumerKafka
+    dependencies:
+      - haskell-kafka
 
 tests:
   haskell-kafka-test:
