@@ -39,6 +39,12 @@ $ stack build
 $ stack exec haskell-publisher-kafka-exe
 ```
 
+7. Run Consumer App:
+```
+$ stack build
+$ stack exec haskell-consumer-kafka-exe
+```
+
 ## Dowload Apache Kafka
 
 1. Dowload Apache Kafka.
@@ -77,4 +83,10 @@ $ ./{KAFKA_PATH}/bin/kafka-console-consumer.sh -bootstrap-server localhost:9092 
 ```
 $ stack build
 $ stack exec haskell-publisher-kafka-exe
+```
+
+9. Run Consumer App:
+```
+$ stack build
+$ stack exec haskell-consumer-kafka-exe
 ```
