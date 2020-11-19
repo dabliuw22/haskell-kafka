@@ -3,10 +3,10 @@
 module PublisherKafka where
 
 import Adapter.Publisher (useProducer)
-import Domain.Message (Key (..), Message (..))
+import Domain.Message (Event (..), Key (..))
 
 main :: IO ()
 main = do
   let key = Key "my-key"
-      message = Message "message"
-  useProducer key message
+      event = OneEvent "MyValue"
+  useProducer key event
