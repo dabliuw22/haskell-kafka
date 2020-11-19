@@ -2,10 +2,13 @@
 
 module Adapter.Publisher (useProducer) where
 
+import Adapter.Json (ToJSON (..))
 import Control.Exception (bracket)
+import Data.Aeson (encode)
+import Data.ByteString.Lazy (toStrict)
 import Data.Map (Map, fromList)
 import Data.Text (Text)
-import Domain.Message (Key (..), Message (..))
+import Domain.Message (Event (..), Key (..))
 import Kafka.Producer
 
 extraProperties :: Map Text Text
@@ -29,28 +32,28 @@ producerProperties =
 topic :: TopicName
 topic = TopicName "haskell.t"
 
-makeRecord :: Key -> Message -> ProducerRecord
-makeRecord (Key k) (Message m) =
+makeRecord :: Key -> Event -> ProducerRecord
+makeRecord (Key k) e =
   ProducerRecord
     { prTopic = topic,
       prPartition = UnassignedPartition,
       prKey = Just k,
-      prValue = Just m
+      prValue = Just $ toStrict (encode e)
     }
 
-useProducer :: Key -> Message -> IO ()
-useProducer key message =
+useProducer :: Key -> Event -> IO ()
+useProducer key event =
   bracket acquire release use >>= print
   where
     acquire = newProducer producerProperties
     release (Left _) = pure ()
     release (Right prod) = closeProducer prod
     use (Left e) = pure $ Left e
-    use (Right prod) = send prod key message
+    use (Right prod) = send prod key event
 
-send :: KafkaProducer -> Key -> Message -> IO (Either KafkaError ())
-send producer key message = do
-  let record = makeRecord key message
+send :: KafkaProducer -> Key -> Event -> IO (Either KafkaError ())
+send producer key event = do
+  let record = makeRecord key event
   result <- produceMessage producer record
   case result of
     Just e -> return $ Left e
