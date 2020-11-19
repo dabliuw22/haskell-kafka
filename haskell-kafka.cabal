@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a58215167eef00ae51fdebb74a5872c22ac8a938aefc12e51ffc340d8e26eee0
+-- hash: ad4774ccbec45cf1eddfb74460e39eb6c365918f050a9d2fdb6005d20423b99c
 
 name:           haskell-kafka
 version:        0.1.0.0
@@ -27,6 +27,7 @@ source-repository head
 
 library
   exposed-modules:
+      Adapter.Json
       Adapter.Publisher
       Adapter.Subscriber
       Domain.Message
