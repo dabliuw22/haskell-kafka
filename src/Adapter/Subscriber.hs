@@ -2,16 +2,21 @@
 
 module Adapter.Subscriber (useConsumer) where
 
+import Adapter.Json (FromJSON (..))
 import Control.Exception (bracket)
 import Control.Monad (replicateM_)
+import Data.Aeson (decode)
+import Data.ByteString (ByteString)
+import Data.ByteString.Lazy (fromStrict)
+import Domain.Message (Event (..))
 import Kafka.Consumer
 
 consumerProperties :: ConsumerProperties
 consumerProperties =
   brokersList [BrokerAddress "localhost:9092"]
-  <> logLevel KafkaLogInfo
-  <> groupId (ConsumerGroupId "haskell.g")
-  <> noAutoCommit
+    <> logLevel KafkaLogInfo
+    <> groupId (ConsumerGroupId "haskell.g")
+    <> noAutoCommit
 
 subscriptions :: Subscription
 subscriptions = topics [TopicName "haskell.t"] <> offsetReset Earliest
@@ -35,10 +40,12 @@ consume consumer = do
     commit status
   return $ Right ()
   where
-    pollRecord (Left (KafkaResponseError RdKafkaRespErrTimedOut)) =  print "TimedOut"
+    pollRecord (Left (KafkaResponseError RdKafkaRespErrTimedOut)) = print "TimedOut"
     pollRecord (Left e) = print $ "Error: " <> show e
-    pollRecord (Right (ConsumerRecord _ _ _ _ key value)) = print $ "Message: " <> show value
+    pollRecord (Right (ConsumerRecord _ _ _ _ key value)) = print $ getEvent value
     commit (Just (KafkaResponseError RdKafkaRespErrNoOffset)) = print "NoOffset"
     commit (Just e) = print $ "Error: " <> show e
-    commit _        = print "Success"
+    commit _ = print "Success"
 
+getEvent :: Maybe ByteString -> Maybe Event
+getEvent bs = bs >>= \v -> decode (fromStrict v)
