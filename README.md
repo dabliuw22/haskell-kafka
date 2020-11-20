@@ -8,8 +8,15 @@
 * Kafka.
 
 # Install `librdkafka`:
+
+On Mac OS:
 ```
 $ brew install librdkafka
+```
+
+On Linux (Debian, Ubuntu):
+```
+$ apt-get install librdkafka-dev
 ```
 
 ## With Docker
