@@ -42,7 +42,7 @@ consume consumer = do
   where
     pollRecord (Left (KafkaResponseError RdKafkaRespErrTimedOut)) = print "TimedOut"
     pollRecord (Left e) = print $ "Error: " <> show e
-    pollRecord (Right (ConsumerRecord _ _ _ _ key value)) = print $ getEvent value
+    pollRecord (Right (ConsumerRecord _ _ _ _ k v)) = print $ getEvent v
     commit (Just (KafkaResponseError RdKafkaRespErrNoOffset)) = print "NoOffset"
     commit (Just e) = print $ "Error: " <> show e
     commit _ = print "Success"
