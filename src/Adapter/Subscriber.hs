@@ -25,9 +25,12 @@ useConsumer :: IO ()
 useConsumer = do
   bracket acquire release use >>= print
   where
+    acquire :: IO (Either KafkaError KafkaConsumer)
     acquire = newConsumer consumerProperties subscriptions
+    release :: Either KafkaError KafkaConsumer -> IO ()
     release (Left _) = pure ()
     release (Right cons) = closeConsumer cons >> pure ()
+    use :: Either KafkaError KafkaConsumer -> IO (Either KafkaError ())
     use (Left e) = pure $ Left e
     use (Right cons) = consume cons
 
@@ -40,9 +43,11 @@ consume consumer = do
     commit status
   return $ Right ()
   where
+    pollRecord :: Either KafkaError (ConsumerRecord (Maybe ByteString) (Maybe ByteString)) -> IO ()
     pollRecord (Left (KafkaResponseError RdKafkaRespErrTimedOut)) = print "TimedOut"
     pollRecord (Left e) = print $ "Error: " <> show e
     pollRecord (Right (ConsumerRecord _ _ _ _ k v)) = print $ getEvent v
+    commit :: Maybe KafkaError -> IO ()
     commit (Just (KafkaResponseError RdKafkaRespErrNoOffset)) = print "NoOffset"
     commit (Just e) = print $ "Error: " <> show e
     commit _ = print "Success"

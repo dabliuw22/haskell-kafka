@@ -45,9 +45,12 @@ useProducer :: Key -> Event -> IO ()
 useProducer key event =
   bracket acquire release use >>= print
   where
+    acquire :: IO (Either KafkaError KafkaProducer)
     acquire = newProducer producerProperties
+    release :: Either KafkaError KafkaProducer -> IO ()
     release (Left _) = pure ()
     release (Right prod) = closeProducer prod
+    use :: Either KafkaError KafkaProducer -> IO (Either KafkaError ())
     use (Left e) = pure $ Left e
     use (Right prod) = send prod key event
 

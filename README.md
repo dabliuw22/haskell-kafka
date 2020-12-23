@@ -7,93 +7,100 @@
 * Docker.
 * Kafka.
 
-# Install `librdkafka`:
+## Install `librdkafka`
 
-On Mac OS:
-```
+### On Mac OS
+```shell
 $ brew install librdkafka
 ```
 
-On Linux (Debian, Ubuntu):
-```
-$ apt-get install librdkafka-dev
+### On Linux (Debian, Ubuntu)
+```shell
+$ sudo apt-get install librdkafka-dev
 ```
 
 ## With Docker
 
-1. Run Docker Compose file:
-```
+### Run Docker Compose file
+```shell
 $ docker-compose up -d
 ```
 
-2. Your IP:
-* mac: `ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'`
-* linux: `hostname -i | awk '{print $1}'`
+### Your IP
 
-3. List Topics:
+#### On Mac OS
+```shell 
+$ ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'
 ```
+#### On Linux (Debian, Ubuntu) 
+```shell
+$ hostname -i | awk '{print $1}'
+```
+
+### List Topics
+```shell
 $ docker exec -it my_haskell_kafka bash /opt/kafka/bin/kafka-topics.sh --list --zookeeper {IP}:2181
 ```
-   
-4. Create Consumer:
-```
+
+### Create Consumer
+```shell
 $ docker exec -it my_haskell_kafka bash /opt/kafka/bin/kafka-console-consumer.sh -bootstrap-server {IP}:9092 --topic haskell.t --from-beginning
 ```
-    
-6. Run Publisher App:
-```
+
+### Run Publisher App
+```shell
 $ stack build
 $ stack exec haskell-publisher-kafka-exe
 ```
 
-7. Run Consumer App:
-```
+### Run Consumer App
+```shell
 $ stack build
 $ stack exec haskell-consumer-kafka-exe
 ```
 
 ## Dowload Apache Kafka
 
-1. Dowload Apache Kafka.
-
-2. Run Apache **Zookeeper**:
-```
+### Run Apache **Zookeeper**
+```shell
 $ ./{KAFKA_PATH}/bin/zookeeper-server-start.sh ./config/zookeeper.properties
 ```
 
-3. Run **Apache Kafka**:
-```
+### Run **Apache Kafka**
+```shell
 $ ./{KAFKA_PATH}/bin/kafka-server-start.sh ./config/server.properties
 ```
-    
-4. Create `haskell.t`:
-* With a Single partions:
-```
+
+### Create `haskell.t`
+
+#### With a Single partitions
+```shell
 $ ./{KAFKA_PATH}/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic haskell.t
 ```
-* With multiple partitions:
-```
+
+#### With multiple partitions
+```shell
 $ ./{KAFKA_PATH}/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 3 --topic haskell.t
 ```
- 
-5. List Topics:
-```
+
+### List Topics
+```shell
 $ ./{KAFKA_PATH}/bin/kafka-topics.sh --list --zookeeper localhost:2181
 ```
-   
-6. Create Consumer:
-```
+
+### Create Consumer
+```shell
 $ ./{KAFKA_PATH}/bin/kafka-console-consumer.sh -bootstrap-server localhost:9092 --topic haskell.t --from-beginning
 ```
 
-8. Run Publisher App:
-```
+### Run Publisher App
+```shell
 $ stack build
 $ stack exec haskell-publisher-kafka-exe
 ```
 
-9. Run Consumer App:
-```
+### Run Consumer App
+```shell
 $ stack build
 $ stack exec haskell-consumer-kafka-exe
 ```
